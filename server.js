@@ -17,6 +17,7 @@ const User = require('./models/User')
 const resource_controller = require('./controllers/Resource');
 const collection_controller = require('./controllers/Collection');
 const subcollection_controller = require('./controllers/Subcollection');
+const team_controller = require('./controllers/Team');
 
 mongoose.connect(dbUrl);
 mongoose.Promise = global.Promise;
@@ -41,18 +42,24 @@ app.get('/', (req, res) => {
   // Mine was '/Users/zellwk/Projects/demo-repos/crud-express-mongo' for this app.
 })
 
-app.get('/resources', resource_controller.full_list);
+// app.get('/resources', resource_controller.full_list);
+//
+// app.post('/resource/create', resource_controller.create);
+//
+// app.get('/resource/:id', resource_controller.find_by_id);
+//
+//
+// app.get('/collections', collection_controller.full_list);
+//
+// app.post('/collection/create', collection_controller.create);
+//
+// app.get('/collection/:id', collection_controller.find_by_id);
+//
+//
+app.post('/team/create', team_controller.create);
+app.delete('/team/delete', team_controller.delete);
 
-app.post('/resource/create', resource_controller.create);
-
-app.get('/resource/:id', resource_controller.find_by_id);
-
-
-app.get('/collections', collection_controller.full_list);
-
-app.post('/collection/create', collection_controller.create);
-
-app.get('/collection/:id', collection_controller.find_by_id);
+app.get('/teams', team_controller.get_full_list);
 
 
 // Resource.find({ size: 'small' }).where('createdDate').gt(oneYearAgo).exec(callback);
