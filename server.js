@@ -10,10 +10,13 @@ const mongoose = require('mongoose');
 const dbUrl = process.env.MONGODB_URL;
 
 const Resource = require('./models/Resource')
-const ResourceCollection = require('./models/ResourceCollection')
+const Collection = require('./models/Collection')
+const Subcollection = require('./models/Subcollection')
 const User = require('./models/User')
 
 const resource_controller = require('./controllers/Resource');
+const collection_controller = require('./controllers/Collection');
+const subcollection_controller = require('./controllers/Subcollection');
 
 mongoose.connect(dbUrl);
 mongoose.Promise = global.Promise;
@@ -40,11 +43,16 @@ app.get('/', (req, res) => {
 
 app.get('/resources', resource_controller.full_list);
 
-// POST request for creating Book.
 app.post('/resource/create', resource_controller.create);
 
-// GET request to delete Book.
 app.get('/resource/:id', resource_controller.find_by_id);
+
+
+app.get('/collections', collection_controller.full_list);
+
+app.post('/collection/create', collection_controller.create);
+
+app.get('/collection/:id', collection_controller.find_by_id);
 
 
 // Resource.find({ size: 'small' }).where('createdDate').gt(oneYearAgo).exec(callback);

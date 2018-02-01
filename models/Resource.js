@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ResourceSchema = new Schema({
-  title: {type:String, required:true},
+  title: {type:String, required:true, max: 100},
   slug: String,
   // image:
   short_description: String,

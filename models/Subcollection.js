@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ResourceCollectionSchema = new Schema({
+const CollectionSchema = new Schema({
   title: {type:String, required:true, max: 100},
   slug: String,
   // image:
@@ -9,7 +9,7 @@ const ResourceCollectionSchema = new Schema({
   long_description: String,
   language: String,
   disclaimer_message: String,
-  // subcollections: [[{ type: Schema.Types.ObjectId, ref: 'ResourceCollectionSchema' }]],
+  // subcollections: [[{ type: Schema.Types.ObjectId, ref: 'CollectionSchema' }]],
   resources: [[{ type: Schema.Types.ObjectId, ref: 'ResourceSchema' }]],
   organization: String,
   default_zoom: Number,
@@ -18,4 +18,4 @@ const ResourceCollectionSchema = new Schema({
   updatedAt: { type: Date, default: Date.now },
 })
 
-module.exports = mongoose.model('ResourceCollection', ResourceCollectionSchema);
+module.exports = mongoose.model('Collection', CollectionSchema);
