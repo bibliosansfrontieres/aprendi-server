@@ -1,37 +1,52 @@
 var Collection = require('../models/Collection');
+var Team = require('../models/Team');
 
-exports.full_list = function(req, res) {
-  // res.json({hello:"hello!"})
-  Collection.find().exec((err, data) => {
-    if (err) { res.send(err) }
-    res.json(data)
-  })
-};
-
-// Display list of all books.
 exports.create = function(req, res) {
-  Collection.create({title: "test", short_description:"Lorem Ipsum", slug:"test"}, (err, data) => {
+  const collection = new Collection(req.body)
+
+  collection.save((err, data) => {
     if (err) { res.send(err) }
+
+    Team.findByIdAndUpdate(req.body.team, { $push: {collections: collection._id}})
+      .exec((err, data) => {
+        console.log(data)
+        res.json(data)
+      })
+  })
+};
+
+exports.delete_by_id = function(req, res) {
+  console.log(req.query)
+  Collection.findByIdAndRemove(req.query, (err, data) => {
+    if (err) { res.send(err) }
+    Team.findByIdAndUpdate(data.team, { $pull: {collections: data._id }})
+      .exec((err, data) => {
+        console.log(data)
+        res.json(data)
+      })
+  })
+};
+
+exports.update_by_id = function(req, res) {
+  console.log(req.body)
+  Collection.findByIdAndUpdate(req.body._id, {$set: req.body}, (err, data) => {
     res.json(data)
   })
 };
 
-exports.delete = function(req, res) {
-  Collection.findByIdAndRemove(req.params.id, (err, data) => {
-    // We'll create a simple object to send back with a message and the id of the document that was removed
-    // You can really do this however you want, though.
-    let response = {
-        message: "Collection successfully deleted",
-        id: data._id
-    };
-    res.status(200).send(response);
-  })
+exports.find_by_url = function(req, res) {
+    Collection.findOne(req.query)
+      .populate('team')
+      .exec(function(err, data) {
+        if (err) { res.send(err) }
+        res.json(data);
+      });
 };
 
-// Display detail page for a specific book.
-exports.find_by_id = function(req, res) {
-    Collection.findById(req.params.id, function(err, data) {
-      if (err) { res.send(err) }
-      res.json(data);
-    });
+exports.get_full_list = function(req, res) {
+  console.log(req.query)
+  Collection.find(req.query, (err, data) => {
+    if (err) { res.send(err) }
+    res.json(data)
+  })
 };

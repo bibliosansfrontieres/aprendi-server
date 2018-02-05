@@ -56,10 +56,37 @@ app.get('/', (req, res) => {
 // app.get('/collection/:id', collection_controller.find_by_id);
 //
 //
-app.post('/team/create', team_controller.create);
-app.delete('/team/delete', team_controller.delete);
 
+
+
+app.post('/team', team_controller.create);
+app.delete('/team', team_controller.delete_by_id);
+app.put('/team', team_controller.update_by_id);
+app.get('/team', team_controller.find_by_url);
 app.get('/teams', team_controller.get_full_list);
+
+
+app.post('/collection', collection_controller.create);
+app.delete('/collection', collection_controller.delete_by_id);
+app.put('/collection', collection_controller.update_by_id);
+app.get('/collection', collection_controller.find_by_url);
+app.get('/collections', collection_controller.get_full_list);
+
+
+app.post('/subcollection', subcollection_controller.create);
+app.delete('/subcollection', subcollection_controller.delete_by_id);
+app.put('/subcollection', subcollection_controller.update_by_id);
+app.get('/subcollection', subcollection_controller.find_by_url);
+app.get('/subcollections', subcollection_controller.get_full_list);
+
+
+app.post('/resource', resource_controller.create);
+app.delete('/resource', resource_controller.delete_by_id);
+app.put('/resource', resource_controller.update_by_id);
+app.get('/resource', resource_controller.find_by_id);
+app.get('/resources', resource_controller.get_full_list);
+
+
 
 
 // Resource.find({ size: 'small' }).where('createdDate').gt(oneYearAgo).exec(callback);
