@@ -37,6 +37,7 @@ exports.update_by_id = function(req, res) {
 exports.find_by_url = function(req, res) {
     Collection.findOne(req.query)
       .populate('team')
+      .populate('subcollections')
       .exec(function(err, data) {
         if (err) { res.send(err) }
         res.json(data);
