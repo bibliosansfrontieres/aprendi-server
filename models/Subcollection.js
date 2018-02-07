@@ -16,7 +16,7 @@ let SubcollectionSchema = new Schema({
 
 let autoPopulate = function(next) {
   this.populate('subcollections');
-  // this.populate('resources');
+  this.populate('resources');
   next();
 };
 

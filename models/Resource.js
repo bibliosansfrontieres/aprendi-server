@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ResourceSchema = new Schema({
   title: {type:String, required:true, max: 100},
-  slug: String,
+  path: String,
   // image:
   short_description: String,
   language: String,

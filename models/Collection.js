@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const CollectionSchema = new Schema({
   title: {type:String, required:true, max: 100},
-  path: String,
+  path: {type:String, required:true, max: 50, unique:true},
   // image:
   short_description: String,
   long_description: String,

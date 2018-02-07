@@ -38,9 +38,11 @@ exports.find_by_url = function(req, res) {
     Collection.findOne(req.query)
       .populate('team')
       .populate('subcollections')
+      .populate('resources')
       .exec(function(err, data) {
         if (err) { res.send(err) }
         res.json(data);
+
       });
 };
 
