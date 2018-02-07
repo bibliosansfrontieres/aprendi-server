@@ -5,7 +5,7 @@ var Team = require('../models/Team');
 exports.create = function(req, res) {
   console.log(req.body)
   const {data, parent} = req.body
-  const subcollection = new Subcollection(req.body.data)
+  const subcollection = new Subcollection(data)
 
   subcollection.save((err, data) => {
     if (err) { res.send(err) }
@@ -26,21 +26,33 @@ exports.create = function(req, res) {
   })
 };
 
+// handle case where someone deletes subcollection that has children
 exports.delete_by_id = function(req, res) {
   console.log(req.query)
-  Subcollection.findByIdAndRemove(req.query, (err, data) => {
+  const {_id, parent_id, parent_type} = req.query
+  Subcollection.findByIdAndRemove(_id, (err, data) => {
     if (err) { res.send(err) }
-    Team.findByIdAndUpdate(data.team, { $pull: {collections: data._id }})
-      .exec((err, data) => {
-        console.log(data)
-        res.json(data)
-      })
+
+    if (parent_type == "collection") {
+      Collection.findByIdAndUpdate(parent_id, { $pull: {subcollections: _id}})
+        .exec((err, data) => {
+          console.log("removed from collection parent")
+        })
+    } else {
+      Subcollection.findByIdAndUpdate(parent_id, { $pull: {subcollections: _id}})
+        .exec((err, data) => {
+          console.log("removed from subcollection parent")
+        })
+    }
+
+    res.json(data)
   })
 };
 
 exports.update_by_id = function(req, res) {
   console.log(req.body)
-  Subcollection.findByIdAndUpdate(req.body._id, {$set: req.body}, (err, data) => {
+  const {data} = req.body
+  Subcollection.findByIdAndUpdate(data._id, {$set: data}, (err, data) => {
     res.json(data)
   })
 };

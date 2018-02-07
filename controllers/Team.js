@@ -26,7 +26,7 @@ exports.find_by_url = function(req, res) {
   console.log("finding", req.query)
 
   Team.findOne(req.query)
-    // .populate('collections')
+    .populate('collections')
     .exec((err, results) => {
       if (err) { res.send(err) }
       console.log(results)

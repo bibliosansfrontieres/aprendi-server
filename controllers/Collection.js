@@ -2,16 +2,20 @@ var Collection = require('../models/Collection');
 var Team = require('../models/Team');
 
 exports.create = function(req, res) {
-  const collection = new Collection(req.body)
+  console.log(req.body)
+  const {data, team} = req.body
+  const collection = new Collection({...data, team:team})
 
   collection.save((err, data) => {
     if (err) { res.send(err) }
 
-    Team.findByIdAndUpdate(req.body.team, { $push: {collections: collection._id}})
+    Team.findByIdAndUpdate(team, { $push: {collections: collection._id}})
       .exec((err, data) => {
         console.log(data)
-        res.json(data)
+
       })
+
+    res.json(data)
   })
 };
 
@@ -29,7 +33,8 @@ exports.delete_by_id = function(req, res) {
 
 exports.update_by_id = function(req, res) {
   console.log(req.body)
-  Collection.findByIdAndUpdate(req.body._id, {$set: req.body}, (err, data) => {
+  const {data} = req.body
+  Collection.findByIdAndUpdate(data._id, {$set: data}, (err, data) => {
     res.json(data)
   })
 };
