@@ -3,7 +3,9 @@ const { getTeamUsers } = require('../utils/get_team_users')
 
 exports.create = function(req, res) {
   console.log(req.body)
-  Team.create(req.body, (err, data) => {
+  const {data} = req.body
+
+  Team.create(data, (err, data) => {
     if (err) { res.send(err) }
     res.json(data)
   })
@@ -17,7 +19,8 @@ exports.delete_by_id = function(req, res) {
 };
 
 exports.update_by_id = function(req, res) {
-  Team.findByIdAndUpdate(req.body._id, {$set: req.body}, (err, data) => {
+  const {data} = req.body
+  Team.findByIdAndUpdate(data._id, {$set: data}, (err, data) => {
     res.json(data)
   })
 };

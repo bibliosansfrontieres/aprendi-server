@@ -20,6 +20,7 @@
   "homepage": "https://github.com/librarieswithoutborders/libraryguide-server#readme",
   "dependencies": {
     "async": "^2.6.0",
+    "aws-sdk": "^2.190.0",
     "axios": "^0.17.1",
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",

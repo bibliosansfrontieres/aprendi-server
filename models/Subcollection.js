@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 let SubcollectionSchema = new Schema({
   title: {type:String, required:true, max: 100},
   path: String,
-  // image:
+  image_url : String,
   short_description: String,
   long_description: String,
   subcollections: [{ type: Schema.Types.ObjectId, ref: 'Subcollection' }],

@@ -7,7 +7,9 @@ const jwks = require('jwks-rsa');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const aws = require('aws-sdk');
 const dbUrl = process.env.MONGODB_URL;
+const S3_BUCKET = process.env.AWS_S3_BUCKET;
 
 const Resource = require('./models/Resource')
 const Collection = require('./models/Collection')
@@ -56,7 +58,32 @@ app.get('/', (req, res) => {
 // app.get('/collection/:id', collection_controller.find_by_id);
 //
 //
+app.get('/sign-s3', (req, res) => {
+  console.log("in sign s3")
+  const s3 = new aws.S3();
+  const fileName = req.query['file-name'];
+  const fileType = req.query['file-type'];
+  const s3Params = {
+    Bucket: S3_BUCKET,
+    Key: "images/" + fileName,
+    Expires: 60,
+    ContentType: fileType,
+    ACL: 'public-read'
+  };
 
+  s3.getSignedUrl('putObject', s3Params, (err, data) => {
+    if(err){
+      console.log(err);
+      return res.end();
+    }
+    const returnData = {
+      signedUrl: data,
+      url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+    };
+    res.write(JSON.stringify(returnData));
+    res.end();
+  });
+});
 
 
 app.post('/team', team_controller.create);
