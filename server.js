@@ -8,7 +8,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const aws = require('aws-sdk');
-const dbUrl = process.env.MONGODB_URL;
+const dbUrl = process.env.MONGODB_URI;
 const S3_BUCKET = process.env.AWS_S3_BUCKET;
 
 const Resource = require('./models/Resource')
@@ -30,7 +30,7 @@ db.once('open', function() {
   // we're connected!
 });
 
-app.listen(3333, function() {
+app.listen(process.env.PORT || 3333, function() {
   console.log('Listening on localhost:3333');
 });
 
