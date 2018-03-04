@@ -28,6 +28,7 @@ exports.create = function(req, res) {
 
 // handle case where someone deletes subcollection that has children
 exports.delete_by_id = function(req, res) {
+  console.log("DELETING SUBCOLLECTION")
   console.log(req.query)
   const {_id, parent_id, parent_type} = req.query
   Subcollection.findByIdAndRemove(_id, (err, data) => {
@@ -55,6 +56,26 @@ exports.update_by_id = function(req, res) {
   Subcollection.findByIdAndUpdate(data._id, {$set: data}, (err, data) => {
     res.json(data)
   })
+};
+
+exports.add_resource = function(req, res) {
+  console.log(req.body)
+  const {resourceId, parentId} = req.body
+  Subcollection.findByIdAndUpdate(parentId, { $push: {resources: resourceId}})
+    .exec((err, data) => {
+      console.log("added to subcollection parent")
+      res.json(data)
+    })
+};
+
+exports.remove_resource = function(req, res) {
+  console.log(req.body)
+  const {resourceId, parentId} = req.body
+  Subcollection.findByIdAndUpdate(parentId, { $pull: {resources: resourceId}})
+    .exec((err, data) => {
+      console.log("added to subcollection parent")
+      res.json(data)
+    })
 };
 
 exports.find_by_url = function(req, res) {

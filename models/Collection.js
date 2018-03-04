@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const uniqueValidator = require('mongoose-unique-validator');
 
 const CollectionSchema = new Schema({
   title: {type:String, required:true, max: 100},
@@ -16,5 +17,8 @@ const CollectionSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 })
+
+CollectionSchema.plugin(uniqueValidator);
+
 
 module.exports = mongoose.model('Collection', CollectionSchema);

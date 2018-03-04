@@ -1,12 +1,20 @@
 var Team = require('../models/Team');
-const { getTeamUsers } = require('../utils/get_team_users')
+var User = require('../models/User');
+// const { getTeamUsers } = require('../utils/get_team_users')
 
 exports.create = function(req, res) {
   console.log(req.body)
   const {data} = req.body
 
-  Team.create(data, (err, data) => {
-    if (err) { res.send(err) }
+  const team = new Team(data)
+  team.save((err, data) => {
+    if (err) { res.send({error: err}) }
+     if (data.users && data.users.length > 0) {
+       User.findByIdAndUpdate(data.users[0], { $push: {teams: team._id}})
+         .exec((err, data) => {
+           console.log(data)
+         })
+     }
     res.json(data)
   })
 };
@@ -20,6 +28,8 @@ exports.delete_by_id = function(req, res) {
 
 exports.update_by_id = function(req, res) {
   const {data} = req.body
+
+  console.log(req.body)
   Team.findByIdAndUpdate(data._id, {$set: data}, (err, data) => {
     res.json(data)
   })
@@ -30,6 +40,8 @@ exports.find_by_url = function(req, res) {
 
   Team.findOne(req.query)
     .populate('collections')
+    .populate('resources')
+    .populate('users')
     .exec((err, results) => {
       if (err) { res.send(err) }
       console.log(results)
@@ -55,3 +67,32 @@ exports.get_full_list = function(req, res) {
     res.json(data)
   })
 };
+
+exports.add_user = (req, res) => {
+  const {teamId, userId} = req.body
+  Team.findByIdAndUpdate(teamId, { $push: {users: userId}})
+    .exec((err, data) => {
+      console.log(data)
+
+    })
+
+  User.findByIdAndUpdate(userId, { $push: {teams: teamId}})
+    .exec((err, data) => {
+      console.log(data)
+      res.json(data)
+    })
+}
+
+exports.remove_user = (req, res) => {
+  const {teamId, userId} = req.body
+  Team.findByIdAndUpdate(teamId, { $pull: {users: userId}})
+    .exec((err, data) => {
+      console.log(data)
+    })
+
+  User.findByIdAndUpdate(userId, { $pull: {teams: teamId}})
+    .exec((err, data) => {
+      console.log(data)
+      res.json(data)
+    })
+}

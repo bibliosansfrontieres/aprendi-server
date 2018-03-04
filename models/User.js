@@ -1,26 +1,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const uniqueValidator = require('mongoose-unique-validator');
+
 
 const UserSchema = new Schema({
-  username: String,
-  first_name: String,
-  last_name: String,
-  organization: String,
+  auth0id: {type:String, required:true, unique:true},
+  email: String,
+  name: String,
+  image_url: String,
+  teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   permission_level: {type: String, required: true, enum: ['Admin', 'Editor'], default: 'Editor'},
-  // resourceCollections: [ResourceCollectionSchema]
-  // image:
 });
 
-UserSchema
-  .virtual('full_name')
-  .get(function () {
-    return this.first_name + ' ' + this.last_name;
-  });
-
-// UserSchema
-//   .virtual('url')
-//   .get(function () {
-//     return '/catalog/author/' + this._id;
-//   });
+UserSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('User', UserSchema);

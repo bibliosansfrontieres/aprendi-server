@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 const aws = require('aws-sdk');
 const dbUrl = process.env.MONGODB_URI;
 const S3_BUCKET = process.env.AWS_S3_BUCKET;
+const gm = require("gm");
 
 const Resource = require('./models/Resource')
 const Collection = require('./models/Collection')
@@ -20,6 +21,7 @@ const resource_controller = require('./controllers/Resource');
 const collection_controller = require('./controllers/Collection');
 const subcollection_controller = require('./controllers/Subcollection');
 const team_controller = require('./controllers/Team');
+const user_controller = require('./controllers/User');
 
 mongoose.connect(dbUrl);
 mongoose.Promise = global.Promise;
@@ -63,9 +65,10 @@ app.get('/sign-s3', (req, res) => {
   const s3 = new aws.S3();
   const fileName = req.query['file-name'];
   const fileType = req.query['file-type'];
+  console.log(fileType)
   const s3Params = {
     Bucket: S3_BUCKET,
-    Key: "images/" + fileName,
+    Key: fileType == 'application/pdf' ? "pdf/" + fileName : "images/" + fileName,
     Expires: 60,
     ContentType: fileType,
     ACL: 'public-read'
@@ -85,17 +88,22 @@ app.get('/sign-s3', (req, res) => {
   });
 });
 
-
 app.post('/team', team_controller.create);
 app.delete('/team', team_controller.delete_by_id);
 app.put('/team', team_controller.update_by_id);
 app.get('/team', team_controller.find_by_url);
 app.get('/teams', team_controller.get_full_list);
+app.put('/team_add_user', team_controller.add_user);
+app.put('/team_remove_user', team_controller.remove_user);
 
+app.get('/users', user_controller.get_full_list);
+app.put('/user', user_controller.find_by_auth0id);
 
 app.post('/collection', collection_controller.create);
 app.delete('/collection', collection_controller.delete_by_id);
 app.put('/collection', collection_controller.update_by_id);
+app.put('/collection-add-resource', collection_controller.add_resource);
+app.put('/collection-remove-resource', collection_controller.remove_resource);
 app.get('/collection', collection_controller.find_by_url);
 app.get('/collections', collection_controller.get_full_list);
 
@@ -103,6 +111,8 @@ app.get('/collections', collection_controller.get_full_list);
 app.post('/subcollection', subcollection_controller.create);
 app.delete('/subcollection', subcollection_controller.delete_by_id);
 app.put('/subcollection', subcollection_controller.update_by_id);
+app.put('/subcollection-add-resource', subcollection_controller.add_resource);
+app.put('/subcollection-remove-resource', subcollection_controller.remove_resource);
 app.get('/subcollection', subcollection_controller.find_by_url);
 app.get('/subcollections', subcollection_controller.get_full_list);
 

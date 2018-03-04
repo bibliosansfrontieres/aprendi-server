@@ -15,6 +15,7 @@ const ResourceSchema = new Schema({
   resource_url: String,
   video_provider: String,
   rich_text: String,
+  team: { type: Schema.Types.ObjectId, ref: 'Team' },
 });
 
 module.exports = mongoose.model('Resource', ResourceSchema);

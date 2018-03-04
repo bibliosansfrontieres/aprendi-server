@@ -26,8 +26,11 @@
     "cors": "^2.8.1",
     "express": "^4.14.0",
     "express-jwt": "^3.4.0",
+    "gm": "^1.23.1",
     "jwks-rsa": "^1.2.0",
-    "mongoose": "^5.0.2"
+    "mongoose": "^5.0.2",
+    "mongoose-unique-validator": "^2.0.0",
+    "pdf-image": "^1.0.5"
   },
   "devDependencies": {
     "populatedb": "^1.0.0"
