@@ -42,7 +42,7 @@ exports.delete_by_id = function(req, res) {
   Resource.findByIdAndRemove(_id, (err, data) => {
     if (err) { res.send(err) }
 
-    if (data.team) {
+    if (data && data.team) {
       Team.findByIdAndUpdate(data.team, { $pull: {resources: _id}})
         .exec((err, data) => {
           console.log("deleted from team")

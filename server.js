@@ -8,9 +8,11 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const aws = require('aws-sdk');
+const fetch = require("node-fetch");
 const dbUrl = process.env.MONGODB_URI;
 const S3_BUCKET = process.env.AWS_S3_BUCKET;
 const gm = require("gm");
+
 
 const Resource = require('./models/Resource')
 const Collection = require('./models/Collection')
@@ -23,7 +25,13 @@ const subcollection_controller = require('./controllers/Subcollection');
 const team_controller = require('./controllers/Team');
 const user_controller = require('./controllers/User');
 
+const signS3 = require('./utils/s3_sign_url').signS3
+const takeWebScreenshot = require('./utils/take_web_screenshot').takeWebScreenshot
+const startPhantomJS = require('./utils/start_phantomjs').startPhantomJS
+
 mongoose.connect(dbUrl);
+// mongoose.connect("mongodb://localhost:27017/")
+
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -33,7 +41,7 @@ db.once('open', function() {
 });
 
 app.listen(process.env.PORT || 3333, function() {
-  console.log('Listening on localhost:3333');
+  console.log('Listening on Port ' + (process.env.PORT || 3333));
 });
 
 app.use(bodyParser.json());
@@ -61,32 +69,53 @@ app.get('/', (req, res) => {
 //
 //
 app.get('/sign-s3', (req, res) => {
-  console.log("in sign s3")
-  const s3 = new aws.S3();
   const fileName = req.query['file-name'];
   const fileType = req.query['file-type'];
-  console.log(fileType)
-  const s3Params = {
-    Bucket: S3_BUCKET,
-    Key: fileType == 'application/pdf' ? "pdf/" + fileName : "images/" + fileName,
-    Expires: 60,
-    ContentType: fileType,
-    ACL: 'public-read'
-  };
 
-  s3.getSignedUrl('putObject', s3Params, (err, data) => {
-    if(err){
-      console.log(err);
-      return res.end();
-    }
-    const returnData = {
-      signedUrl: data,
-      url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
-    };
-    res.write(JSON.stringify(returnData));
-    res.end();
-  });
+  const key = fileType == 'application/pdf' ? "pdf/" + fileName : "images/" + fileName
+
+  const onError = () => res.end()
+
+  signS3({key: key, fileType: fileType, fileName: fileName})
+    .then(returnData => {
+      res.write(JSON.stringify(returnData));
+      res.end();
+    })
 });
+
+app.get('/take-web-screenshot', (req, res) => {
+  console.log("taking screenshot")
+  const url = req.query['url'];
+
+  takeWebScreenshot(url)
+    .then(data => {
+      console.log("screenshot successful")
+      console.log(data)
+
+      const fileName = "web-screenshot_" + +new Date() + ".png"
+
+      const signS3Params = {
+        key: "images/" + fileName,
+        fileType: "image/png",
+        fileName: fileName,
+      }
+
+      signS3(signS3Params)
+        .then(({signedUrl, url}) => {
+          console.log(signedUrl, url)
+
+          fetch(signedUrl, { method: 'PUT', body: data })
+            .then(() => {
+              res.write(JSON.stringify(fileName));
+              res.end();
+            })
+            .catch(error => console.log("error", error))
+        })
+        .catch(error => console.log("error", error))
+    })
+    .catch(error => console.log("error", error))
+
+})
 
 app.post('/team', team_controller.create);
 app.delete('/team', team_controller.delete_by_id);
@@ -97,7 +126,8 @@ app.put('/team_add_user', team_controller.add_user);
 app.put('/team_remove_user', team_controller.remove_user);
 
 app.get('/users', user_controller.get_full_list);
-app.put('/user', user_controller.find_by_auth0id);
+app.put('/user', user_controller.update_by_id);
+app.put('/user-get-upsert', user_controller.find_by_auth0id);
 
 app.post('/collection', collection_controller.create);
 app.delete('/collection', collection_controller.delete_by_id);
@@ -168,69 +198,3 @@ const authCheck = jwt({
     issuer: process.env.AUTH0_DOMAIN,
     algorithms: ['RS256']
 });
-
-
-
-app.post('/quotes', (req, res) => {
-  console.log(req.body)
-})
-
-app.get('/api/jokes/food', (req, res) => {
-  let foodJokes = [
-  {
-    id: 99991,
-    joke: "When Chuck Norris was a baby, he didn't suck his mother's breast. His mother served him whiskey, straight out of the bottle."
-  },
-  {
-    id: 99992,
-    joke: 'When Chuck Norris makes a burrito, its main ingredient is real toes.'
-  },
-  {
-    id: 99993,
-    joke: 'Chuck Norris eats steak for every single meal. Most times he forgets to kill the cow.'
-  },
-  {
-    id: 99994,
-    joke: "Chuck Norris doesn't believe in ravioli. He stuffs a live turtle with beef and smothers it in pig's blood."
-  },
-  {
-    id: 99995,
-    joke: "Chuck Norris recently had the idea to sell his urine as a canned beverage. We know this beverage as Red Bull."
-  },
-  {
-    id: 99996,
-    joke: 'When Chuck Norris goes to out to eat, he orders a whole chicken, but he only eats its soul.'
-  }
-  ];
-  res.json(foodJokes);
-})
-
-app.get('/api/jokes/celebrity', authCheck, (req,res) => {
-  let CelebrityJokes = [
-  {
-    id: 88881,
-    joke: 'As President Roosevelt said: "We have nothing to fear but fear itself. And Chuck Norris."'
-  },
-  {
-    id: 88882,
-    joke: "Chuck Norris only let's Charlie Sheen think he is winning. Chuck won a long time ago."
-  },
-  {
-    id: 88883,
-    joke: 'Everything King Midas touches turnes to gold. Everything Chuck Norris touches turns up dead.'
-  },
-  {
-    id: 88884,
-    joke: 'Each time you rate this, Chuck Norris hits Obama with Charlie Sheen and says, "Who is winning now?!"'
-  },
-  {
-    id: 88885,
-    joke: "For Charlie Sheen winning is just wishful thinking. For Chuck Norris it's a way of life."
-  },
-  {
-    id: 88886,
-    joke: "Hellen Keller's favorite color is Chuck Norris."
-  }
-  ];
-  res.json(CelebrityJokes);
-})

@@ -62,10 +62,12 @@ exports.find_by_url = function(req, res) {
 };
 
 exports.get_full_list = function(req, res) {
-  Team.find({}, (err, data) => {
-    if (err) { res.send(err) }
-    res.json(data)
-  })
+  Team.find({})
+    .sort( { team_name: 1 } )
+    .exec((err, data) => {
+      if (err) { res.send(err) }
+      res.json(data)
+    })
 };
 
 exports.add_user = (req, res) => {

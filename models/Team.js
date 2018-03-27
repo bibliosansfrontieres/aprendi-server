@@ -11,7 +11,10 @@ const TeamSchema = new Schema({
   image_url: String,
   description: String,
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
-}, { timestamps: true });
+},
+{
+  timestamps: true
+});
 
 TeamSchema.plugin(uniqueValidator);
 

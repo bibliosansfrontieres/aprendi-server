@@ -21,3 +21,13 @@ exports.find_by_auth0id = function(req, res) {
       res.json(results)
     })
 }
+
+exports.update_by_id = function(req, res) {
+  const {data} = req.body
+
+  console.log(req.body)
+  User.findOneAndUpdate(data._id, {$set: {core_admin: data.core_admin}}, {new: true}, (err, data) => {
+    if (err) { res.send(err) }
+    res.json(data)
+  })
+};

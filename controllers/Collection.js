@@ -78,8 +78,11 @@ exports.find_by_url = function(req, res) {
 
 exports.get_full_list = function(req, res) {
   console.log(req.query)
-  Collection.find(req.query, (err, data) => {
-    if (err) { res.send({error: err}) }
-    res.json(data)
-  })
+  Collection.find(req.query)
+    .sort( { title: 1 } )
+    .populate('team')
+    .exec((err, data) => {
+      if (err) { res.send({error: err}) }
+      res.json(data)
+    })
 };

@@ -5,13 +5,12 @@ let SubcollectionSchema = new Schema({
   title: {type:String, required:true, max: 100},
   path: String,
   image_url : String,
-  short_description: String,
-  long_description: String,
+  disclaimer_message: String,
   subcollections: [{ type: Schema.Types.ObjectId, ref: 'Subcollection' }],
   resources: [{ type: Schema.Types.ObjectId, ref: 'Resource' }],
-  default_zoom: Number,
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
+},
+{
+  timestamps: true
 })
 
 let autoPopulate = function(next) {

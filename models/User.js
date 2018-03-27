@@ -9,7 +9,10 @@ const UserSchema = new Schema({
   name: String,
   image_url: String,
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
-  permission_level: {type: String, required: true, enum: ['Admin', 'Editor'], default: 'Editor'},
+  core_admin: { type:Boolean, default: false },
+},
+{
+  timestamps: { updatedAt: 'updated_at', createdAt: 'created_at' }
 });
 
 UserSchema.plugin(uniqueValidator);
