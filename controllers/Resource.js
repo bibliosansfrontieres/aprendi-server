@@ -71,8 +71,10 @@ exports.find_by_id = function(req, res) {
 
 exports.get_full_list = function(req, res) {
   console.log(req.query)
-  Resource.find(req.query, (err, data) => {
-    if (err) { res.send(err) }
-    res.json(data)
-  })
+  Resource.find(req.query)
+    .populate('team')
+    .exec((err, data) => {
+      if (err) { res.send(err) }
+      res.json(data)
+    })
 };
