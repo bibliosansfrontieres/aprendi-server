@@ -13,7 +13,6 @@ const dbUrl = process.env.MONGODB_URI;
 const S3_BUCKET = process.env.AWS_S3_BUCKET;
 const gm = require("gm");
 
-
 const Resource = require('./models/Resource')
 const Collection = require('./models/Collection')
 const Subcollection = require('./models/Subcollection')
@@ -127,7 +126,7 @@ app.put('/team_remove_user', team_controller.remove_user);
 
 app.get('/users', user_controller.get_full_list);
 app.put('/user', user_controller.update_by_id);
-app.put('/user-get-upsert', user_controller.find_by_auth0id);
+app.put('/user-find-by-auth0id', user_controller.find_by_auth0id);
 
 app.post('/collection', collection_controller.create);
 app.delete('/collection', collection_controller.delete_by_id);
