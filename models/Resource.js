@@ -10,7 +10,7 @@ const ResourceSchema = new Schema({
   more_info: String,
   resource_url: String,
   video_provider: String,
-  rich_text: String,
+  rich_text_content: String,
   shared: {type: Boolean, default: false},
   team: { type: Schema.Types.ObjectId, ref: 'Team' },
 },
