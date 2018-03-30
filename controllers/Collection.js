@@ -86,3 +86,12 @@ exports.get_full_list = function(req, res) {
       res.json(data)
     })
 };
+
+// exports.is_path_taken = function(req, res) {
+//   console.log(req.query)
+//   Collection.findOne(req.query)
+//     .exec((err, data) => {
+//       if (err) { res.send({error: err}) }
+//       res.json(data ? true : false)
+//     })
+// };

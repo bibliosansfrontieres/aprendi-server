@@ -135,7 +135,7 @@ app.put('/collection-add-resource', collection_controller.add_resource);
 app.put('/collection-remove-resource', collection_controller.remove_resource);
 app.get('/collection', collection_controller.find_by_url);
 app.get('/collections', collection_controller.get_full_list);
-
+// app.get('/collection-is-path-taken', collection_controller.is_path_taken);
 
 app.post('/subcollection', subcollection_controller.create);
 app.delete('/subcollection', subcollection_controller.delete_by_id);

@@ -8,7 +8,7 @@ exports.takeWebScreenshot = (url) => {
     screenshot.renderUrl(url, function (err, data) {
       if (err) {
         reject(err)
-        return screenshot.error(err, cb);
+        return screenshot.error(err);
       }
 
       console.log(data)
