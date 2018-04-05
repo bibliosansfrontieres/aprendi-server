@@ -3,6 +3,7 @@ var Collection = require('../models/Collection');
 var Team = require('../models/Team');
 
 exports.create = function(req, res) {
+  console.log("CREATING SUBCOLLECTION")
   console.log(req.body)
   const {data, parent} = req.body
   const subcollection = new Subcollection(data)
@@ -11,12 +12,12 @@ exports.create = function(req, res) {
     if (err) { res.send(err) }
 
     if (parent.parentType === "collection") {
-      Collection.findByIdAndUpdate(parent.parentId, { $push: {subcollections: subcollection._id}})
+      Collection.findByIdAndUpdate(parent.parentData._id, { $push: {subcollections: subcollection._id}})
         .exec((err, data) => {
           console.log("added to collection parent")
         })
     } else {
-      Subcollection.findByIdAndUpdate(parent.parentId, { $push: {subcollections: subcollection._id}})
+      Subcollection.findByIdAndUpdate(parent.parentData._id, { $push: {subcollections: subcollection._id}})
         .exec((err, data) => {
           console.log("added to subcollection parent")
         })
