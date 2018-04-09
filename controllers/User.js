@@ -26,8 +26,9 @@ exports.update_by_id = function(req, res) {
   const {data} = req.body
 
   console.log(req.body)
-  User.findOneAndUpdate(data._id, {$set: {core_admin: data.core_admin}}, {new: true}, (err, data) => {
+  User.findOneAndUpdate({_id: data._id}, {$set: {core_admin: data.core_admin}}, {new: true}, (err, data) => {
     if (err) { res.send(err) }
+    console.log(data)
     res.json(data)
   })
 };

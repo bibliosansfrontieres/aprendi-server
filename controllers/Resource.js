@@ -6,6 +6,9 @@ var Team = require('../models/Team');
 exports.create = function(req, res) {
   console.log(req.body)
   const {data, parent, team} = req.body
+  console.log("__________________")
+  console.log(data)
+  console.log("__________________")
   const resource = new Resource(data)
 
   resource.save((err, data) => {
