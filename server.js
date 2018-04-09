@@ -122,7 +122,9 @@ app.put('/team', team_controller.update_by_id);
 app.get('/team', team_controller.find_by_url);
 app.get('/teams', team_controller.get_full_list);
 app.put('/team_add_user', team_controller.add_user);
+app.put('/team_approve_user_request', team_controller.approve_user_request);
 app.put('/team_remove_user', team_controller.remove_user);
+
 
 app.get('/users', user_controller.get_full_list);
 app.put('/user', user_controller.update_by_id);

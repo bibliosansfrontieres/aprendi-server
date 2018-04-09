@@ -42,6 +42,7 @@ exports.find_by_url = function(req, res) {
     .populate('collections')
     .populate('resources')
     .populate('users')
+    .populate('pending_users')
     .exec((err, results) => {
       if (err) { res.send(err) }
       console.log(results)
@@ -64,6 +65,7 @@ exports.find_by_url = function(req, res) {
 exports.get_full_list = function(req, res) {
   Team.find({})
     .sort( { team_name: 1 } )
+    .populate('pending_users')
     .exec((err, data) => {
       if (err) { res.send(err) }
       res.json(data)
@@ -71,18 +73,50 @@ exports.get_full_list = function(req, res) {
 };
 
 exports.add_user = (req, res) => {
+  const {teamId, userId, approvalStatus} = req.body
+
+  if (approvalStatus === "pending") {
+    Team.findByIdAndUpdate(teamId, { $push: {pending_users: userId}})
+      .exec((err, data) => {
+        console.log(data)
+
+      })
+
+    User.findByIdAndUpdate(userId, { $push: {pending_teams: teamId}})
+      .exec((err, data) => {
+        console.log(data)
+        res.json(data)
+      })
+  } else {
+    Team.findByIdAndUpdate(teamId, { $push: {users: userId}})
+      .exec((err, data) => {
+        console.log(data)
+
+      })
+
+    User.findByIdAndUpdate(userId, { $push: {teams: teamId}})
+      .exec((err, data) => {
+        console.log(data)
+        res.json(data)
+      })
+  }
+}
+
+exports.approve_user_request = (req, res) => {
   const {teamId, userId} = req.body
-  Team.findByIdAndUpdate(teamId, { $push: {users: userId}})
+
+  Team.findByIdAndUpdate(teamId, { $push: {users: userId}, $pull: {pending_users: userId}})
     .exec((err, data) => {
       console.log(data)
 
     })
 
-  User.findByIdAndUpdate(userId, { $push: {teams: teamId}})
+  User.findByIdAndUpdate(userId, { $push: {teams: teamId}, $pull: {pending_teams: teamId} })
     .exec((err, data) => {
       console.log(data)
       res.json(data)
     })
+
 }
 
 exports.remove_user = (req, res) => {

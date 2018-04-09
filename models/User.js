@@ -9,6 +9,7 @@ const UserSchema = new Schema({
   name: String,
   image_url: String,
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
+  pending_teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   core_admin: { type:Boolean, default: false },
 },
 {

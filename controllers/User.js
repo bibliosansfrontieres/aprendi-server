@@ -15,6 +15,7 @@ exports.find_by_auth0id = function(req, res) {
   console.log("finding", req.body)
   User.findOneAndUpdate({auth0id: req.body.sub}, {$set: {email: req.body.email, name: req.body.name, image_url: req.body.picture}}, {upsert: true, 'new': true})
     .populate('teams')
+    .populate('pending_teams')
     .exec((err, results) => {
       if (err) { res.send(err) }
       console.log(results)

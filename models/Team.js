@@ -10,7 +10,8 @@ const TeamSchema = new Schema({
   resources: [{ type: Schema.Types.ObjectId, ref: 'Resource' }],
   image_url: String,
   description: String,
-  users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+  users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  pending_users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 },
 {
   timestamps: true
