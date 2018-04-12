@@ -1,4 +1,4 @@
-var User = require('../models/User');
+var User = require('../models/User')
 const { getUsersFromAuth0 } = require('../utils/get_users_from_auth0')
 
 exports.get_full_list = function(req, res) {
@@ -9,7 +9,7 @@ exports.get_full_list = function(req, res) {
 
       res.json(data)
     })
-};
+}
 
 exports.find_by_auth0id = function(req, res) {
   console.log("finding", req.body)
@@ -32,4 +32,4 @@ exports.update_by_id = function(req, res) {
     console.log(data)
     res.json(data)
   })
-};
+}

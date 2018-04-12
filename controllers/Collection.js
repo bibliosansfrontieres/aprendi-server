@@ -1,5 +1,5 @@
-var Collection = require('../models/Collection');
-var Team = require('../models/Team');
+var Collection = require('../models/Collection')
+var Team = require('../models/Team')
 
 exports.create = function(req, res) {
   console.log(req.body)
@@ -17,7 +17,7 @@ exports.create = function(req, res) {
 
     res.json(data)
   })
-};
+}
 
 exports.delete_by_id = function(req, res) {
   console.log(req.query)
@@ -29,7 +29,7 @@ exports.delete_by_id = function(req, res) {
         res.json(data)
       })
   })
-};
+}
 
 exports.update_by_id = function(req, res) {
   console.log("this is the request")
@@ -38,10 +38,10 @@ exports.update_by_id = function(req, res) {
   Collection.findByIdAndUpdate(data._id, {$set: data})
     .exec(function(err, data) {
       if (err) { res.send({error: err}) }
-      res.json(data);
+      res.json(data)
 
-    });
-};
+    })
+}
 
 exports.add_resource = function(req, res) {
   console.log(req.body)
@@ -51,7 +51,7 @@ exports.add_resource = function(req, res) {
       console.log("added to collection parent")
       res.json(data)
     })
-};
+}
 
 exports.remove_resource = function(req, res) {
   console.log(req.body)
@@ -61,7 +61,7 @@ exports.remove_resource = function(req, res) {
       console.log("removed from collection")
       res.json(data)
     })
-};
+}
 
 exports.find_by_url = function(req, res) {
   console.log("finding collection", req.query)
@@ -71,10 +71,10 @@ exports.find_by_url = function(req, res) {
       .populate('resources')
       .exec(function(err, data) {
         if (err) { res.send({error: err}) }
-        res.json(data);
+        res.json(data)
 
-      });
-};
+      })
+}
 
 exports.get_full_list = function(req, res) {
   console.log(req.query)
@@ -85,7 +85,7 @@ exports.get_full_list = function(req, res) {
       if (err) { res.send({error: err}) }
       res.json(data)
     })
-};
+}
 
 // exports.is_path_taken = function(req, res) {
 //   console.log(req.query)
@@ -94,4 +94,4 @@ exports.get_full_list = function(req, res) {
 //       if (err) { res.send({error: err}) }
 //       res.json(data ? true : false)
 //     })
-// };
+// }

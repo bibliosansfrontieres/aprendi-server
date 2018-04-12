@@ -1,5 +1,5 @@
-var Team = require('../models/Team');
-var User = require('../models/User');
+var Team = require('../models/Team')
+var User = require('../models/User')
 // const { getTeamUsers } = require('../utils/get_team_users')
 
 exports.create = function(req, res) {
@@ -17,14 +17,14 @@ exports.create = function(req, res) {
      }
     res.json(data)
   })
-};
+}
 
 exports.delete_by_id = function(req, res) {
   Team.findByIdAndRemove(req.query, (err, data) => {
     if (err) { res.send(err) }
     res.json(data)
   })
-};
+}
 
 exports.update_by_id = function(req, res) {
   const {data} = req.body
@@ -33,7 +33,7 @@ exports.update_by_id = function(req, res) {
   Team.findByIdAndUpdate(data._id, {$set: data}, (err, data) => {
     res.json(data)
   })
-};
+}
 
 exports.find_by_url = function(req, res) {
   console.log("finding", req.query)
@@ -47,9 +47,9 @@ exports.find_by_url = function(req, res) {
       if (err) { res.send(err) }
       console.log(results)
       res.json(results)
-      // let retObject = {};
-      // retObject.team_id = results.team_id;
-      // retObject.team_name = results.team_name;
+      // let retObject = {}
+      // retObject.team_id = results.team_id
+      // retObject.team_name = results.team_name
       //
       // let getUsersPromise = getTeamUsers(results.team_id)
       // let getCollectionsPromise = getCollectionsByTeam(results.team_id)
@@ -58,9 +58,9 @@ exports.find_by_url = function(req, res) {
       //   retObject.users = JSON.parse(users)
       //   retObject.collections = collections
       //   res.json(retObject)
-      // });
+      // })
     })
-};
+}
 
 exports.get_full_list = function(req, res) {
   Team.find({})
@@ -70,7 +70,7 @@ exports.get_full_list = function(req, res) {
       if (err) { res.send(err) }
       res.json(data)
     })
-};
+}
 
 exports.add_user = (req, res) => {
   const {teamId, userId, approvalStatus} = req.body
@@ -82,7 +82,7 @@ exports.add_user = (req, res) => {
 
       })
 
-    User.findByIdAndUpdate(userId, { $push: {pending_teams: teamId}})
+    User.findByIdAndUpdate(userId, { $push: {pending_teams: teamId}}, {'new': true})
       .exec((err, data) => {
         console.log(data)
         res.json(data)

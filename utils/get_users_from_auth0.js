@@ -1,5 +1,5 @@
 const { getToken } = require('./auth_token')
-var request = require("request");
+var request = require("request")
 
 exports.getUsersFromAuth0 = function(teamId) {
   return new Promise(function(resolve, reject) {
@@ -11,12 +11,12 @@ exports.getUsersFromAuth0 = function(teamId) {
         url: 'https://librarieswithoutborders.auth0.com/api/v2/users',
         headers:
          { authorization: 'Bearer ' + token.access_token,
-           'content-type': 'application/json' } };
+           'content-type': 'application/json' } }
 
       request(options, function (error, response, body) {
-        if (error) throw new Error(error);
+        if (error) throw new Error(error)
         resolve(body)
-      });
-    });
+      })
+    })
   })
 }

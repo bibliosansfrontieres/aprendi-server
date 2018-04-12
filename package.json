@@ -32,6 +32,7 @@
     "jquery": "^3.3.1",
     "jwks-rsa": "^1.2.0",
     "mongoose": "^5.0.2",
+    "mongoose-unique-array": "^0.2.0",
     "mongoose-unique-validator": "^2.0.0",
     "node-fetch": "^2.1.1",
     "pdf-image": "^1.0.5",

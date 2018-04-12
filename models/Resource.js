@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const ResourceSchema = new Schema({
   title: {type:String, required:true, max: 100},
@@ -16,6 +16,6 @@ const ResourceSchema = new Schema({
 },
 {
   timestamps: true
-});
+})
 
-module.exports = mongoose.model('Resource', ResourceSchema);
+module.exports = mongoose.model('Resource', ResourceSchema)

@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
+const Schema = mongoose.Schema
 const { urlValidate } = require('../utils/url_validate')
 
 const TeamSchema = new Schema({
@@ -15,8 +15,8 @@ const TeamSchema = new Schema({
 },
 {
   timestamps: true
-});
+})
 
-TeamSchema.plugin(uniqueValidator);
+TeamSchema.plugin(uniqueValidator)
 
-module.exports = mongoose.model('Team', TeamSchema);
+module.exports = mongoose.model('Team', TeamSchema)

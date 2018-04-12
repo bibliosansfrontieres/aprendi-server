@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 let SubcollectionSchema = new Schema({
   title: {type:String, required:true, max: 100},
@@ -14,13 +14,13 @@ let SubcollectionSchema = new Schema({
 })
 
 let autoPopulate = function(next) {
-  this.populate('subcollections');
-  this.populate('resources');
-  next();
-};
+  this.populate('subcollections')
+  this.populate('resources')
+  next()
+}
 
 SubcollectionSchema.
   pre('findOne', autoPopulate).
-  pre('find', autoPopulate);
+  pre('find', autoPopulate)
 
-module.exports = mongoose.model('Subcollection', SubcollectionSchema);
+module.exports = mongoose.model('Subcollection', SubcollectionSchema)

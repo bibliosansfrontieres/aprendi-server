@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const AuthToken = new Schema({
   access_token: String,
@@ -7,6 +7,6 @@ const AuthToken = new Schema({
   scope: String,
   token_type: String,
   createdAt: { type: Date, default: Date.now },
-});
+})
 
-module.exports = mongoose.model('AuthToken', AuthToken);
+module.exports = mongoose.model('AuthToken', AuthToken)

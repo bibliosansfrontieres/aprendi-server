@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const uniqueValidator = require('mongoose-unique-validator')
 
 const CollectionSchema = new Schema({
   title: {type:String, required:true, max: 100},
@@ -18,6 +18,6 @@ const CollectionSchema = new Schema({
   timestamps: true
 })
 
-CollectionSchema.plugin(uniqueValidator);
+CollectionSchema.plugin(uniqueValidator)
 
-module.exports = mongoose.model('Collection', CollectionSchema);
+module.exports = mongoose.model('Collection', CollectionSchema)

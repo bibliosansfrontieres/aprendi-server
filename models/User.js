@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const uniqueValidator = require('mongoose-unique-validator');
-
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const uniqueValidator = require('mongoose-unique-validator')
+// const arrayUniquePlugin = require('mongoose-unique-array')
 
 const UserSchema = new Schema({
   auth0id: {type:String, required:true, unique:true},
@@ -14,8 +14,9 @@ const UserSchema = new Schema({
 },
 {
   timestamps: { updatedAt: 'updated_at', createdAt: 'created_at' }
-});
+})
 
-UserSchema.plugin(uniqueValidator);
+UserSchema.plugin(uniqueValidator)
+// UserSchema.plugin(arrayUniquePlugin)
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema)
