@@ -119,6 +119,23 @@ exports.approve_user_request = (req, res) => {
 
 }
 
+exports.deny_user_request = (req, res) => {
+  const {teamId, userId} = req.body
+
+  Team.findByIdAndUpdate(teamId, { $pull: {pending_users: userId}})
+    .exec((err, data) => {
+      console.log(data)
+
+    })
+
+  User.findByIdAndUpdate(userId, { $pull: {pending_teams: teamId} })
+    .exec((err, data) => {
+      console.log(data)
+      res.json(data)
+    })
+
+}
+
 exports.remove_user = (req, res) => {
   const {teamId, userId} = req.body
   Team.findByIdAndUpdate(teamId, { $pull: {users: userId}})

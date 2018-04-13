@@ -1,4 +1,5 @@
 var User = require('../models/User')
+var Team = require('../models/Team')
 const { getUsersFromAuth0 } = require('../utils/get_users_from_auth0')
 
 exports.get_full_list = function(req, res) {
@@ -23,13 +24,25 @@ exports.find_by_auth0id = function(req, res) {
     })
 }
 
-exports.update_by_id = function(req, res) {
+exports.user_make_core_admin = function(req, res) {
   const {data} = req.body
 
   console.log(req.body)
-  User.findOneAndUpdate({_id: data._id}, {$set: {core_admin: data.core_admin}}, {new: true}, (err, data) => {
+  User.findOneAndUpdate({_id: data._id}, {$set: {core_admin: data.core_admin, teams: [], pending_teams: []}}, (err, data) => {
     if (err) { res.send(err) }
     console.log(data)
-    res.json(data)
+
+    if (data.teams && data.teams.length > 0) {
+      Team.update({_id: {$in: data.teams}}, { $pull: {users: data._id, pending_users: data._id}}, { multi: true})
+        .exec((err, results) => {
+          if (err) { res.send(err) }
+          console.log(results)
+          res.json(data)
+        })
+    } else {
+      res.json(data)
+    }
   })
+
+
 }

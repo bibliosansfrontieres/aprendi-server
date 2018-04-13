@@ -123,11 +123,12 @@ app.get('/team', team_controller.find_by_url)
 app.get('/teams', team_controller.get_full_list)
 app.put('/team_add_user', team_controller.add_user)
 app.put('/team_approve_user_request', team_controller.approve_user_request)
+app.put('/team_deny_user_request', team_controller.deny_user_request)
 app.put('/team_remove_user', team_controller.remove_user)
 
 
 app.get('/users', user_controller.get_full_list)
-app.put('/user', user_controller.update_by_id)
+app.put('/user-make-core-admin', user_controller.user_make_core_admin)
 app.put('/user-find-by-auth0id', user_controller.find_by_auth0id)
 
 app.post('/collection', collection_controller.create)
