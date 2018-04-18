@@ -9,7 +9,6 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const aws = require('aws-sdk')
 const fetch = require("node-fetch")
-const dbUrl = process.env.MONGODB_URI
 const S3_BUCKET = process.env.AWS_S3_BUCKET
 const gm = require("gm")
 
@@ -27,6 +26,8 @@ const user_controller = require('./controllers/User')
 const signS3 = require('./utils/s3_sign_url').signS3
 const takeWebScreenshot = require('./utils/take_web_screenshot').takeWebScreenshot
 const startPhantomJS = require('./utils/start_phantomjs').startPhantomJS
+
+const dbUrl = process.env.MONGODB_URI
 
 mongoose.connect(dbUrl)
 // mongoose.connect("mongodb://localhost:27017/")
@@ -71,7 +72,7 @@ app.get('/sign-s3', (req, res) => {
   const fileName = req.query['file-name']
   const fileType = req.query['file-type']
 
-  const key = fileType == 'application/pdf' ? "pdf/" + fileName : "images/" + fileName
+  const key = fileType == 'application/pdf' ? "pdf/" + fileName : "thumbnail-images/" + fileName
 
   const onError = () => res.end()
 
@@ -80,6 +81,40 @@ app.get('/sign-s3', (req, res) => {
       res.write(JSON.stringify(returnData))
       res.end()
     })
+})
+
+app.get('/take-web-screenshot', (req, res) => {
+  console.log("taking screenshot")
+  const url = req.query['url']
+
+  takeWebScreenshot(url)
+    .then(data => {
+      console.log("screenshot successful")
+      console.log(data)
+
+      const fileName = "web-screenshot_" + +new Date() + ".png"
+
+      const signS3Params = {
+        key: "images/" + fileName,
+        fileType: "image/png",
+        fileName: fileName,
+      }
+
+      signS3(signS3Params)
+        .then(({signedUrl, url}) => {
+          console.log(signedUrl, url)
+
+          fetch(signedUrl, { method: 'PUT', body: data })
+            .then(() => {
+              res.write(JSON.stringify(fileName))
+              res.end()
+            })
+            .catch(error => console.log("error", error))
+        })
+        .catch(error => console.log("error", error))
+    })
+    .catch(error => console.log("error", error))
+
 })
 
 app.get('/take-web-screenshot', (req, res) => {
