@@ -9,6 +9,7 @@ const TeamSchema = new Schema({
   collections: [{ type: Schema.Types.ObjectId, ref: 'Collection' }],
   resources: [{ type: Schema.Types.ObjectId, ref: 'Resource' }],
   image_url: String,
+  thumbnail_image_url: String,
   description: String,
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   pending_users: [{ type: Schema.Types.ObjectId, ref: 'User' }],

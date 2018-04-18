@@ -5,6 +5,7 @@ const ResourceSchema = new Schema({
   title: {type:String, required:true, max: 100},
   path: {type:String, required:true},
   image_url : String,
+  thumbnail_image_url : String,
   disclaimer_message: String,
   resource_type: String,
   more_info: String,

@@ -6,6 +6,7 @@ const CollectionSchema = new Schema({
   title: {type:String, required:true, max: 100},
   path: {type:String, required:true, max: 50, unique:true},
   image_url : String,
+  thumbnail_image_url : String,
   disclaimer_message: String,
   subcollections: [{ type: Schema.Types.ObjectId, ref: 'Subcollection' }],
   resources: [{ type: Schema.Types.ObjectId, ref: 'Resource' }],
