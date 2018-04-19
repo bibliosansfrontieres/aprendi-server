@@ -71,8 +71,9 @@ app.get('/', (req, res) => {
 app.get('/sign-s3', (req, res) => {
   const fileName = req.query['file-name']
   const fileType = req.query['file-type']
+  const folder = req.query['folder']
 
-  const key = fileType == 'application/pdf' ? "pdf/" + fileName : "thumbnail-images/" + fileName
+  const key =  folder + '/' + fileName
 
   const onError = () => res.end()
 
