@@ -73,9 +73,7 @@ exports.find_by_id = function(req, res) {
 }
 
 exports.get_full_list = function(req, res) {
-  console.log(req.query)
-  let dbQuery = req.query && req.query.just_shared === "true" ? {shared: true} : {}
-  Resource.find(dbQuery)
+  Resource.find(req.query)
     .populate('team')
     .exec((err, data) => {
       if (err) { res.send(err) }
