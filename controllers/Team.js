@@ -20,9 +20,10 @@ exports.create = function(req, res) {
 }
 
 exports.delete_by_id = function(req, res) {
-  Team.findByIdAndRemove(req.query, (err, data) => {
+  Team.findById(req.query, (err,doc) => {
     if (err) { res.send(err) }
-    res.json(data)
+    doc.remove()
+    res.json(doc)
   })
 }
 

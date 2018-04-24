@@ -20,8 +20,8 @@ let autoPopulate = function(next) {
   next()
 }
 
-SubcollectionSchema.
-  pre('findOne', autoPopulate).
-  pre('find', autoPopulate)
+SubcollectionSchema
+  .pre('findOne', autoPopulate)
+  .pre('find', autoPopulate)
 
 module.exports = mongoose.model('Subcollection', SubcollectionSchema)
