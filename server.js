@@ -107,41 +107,7 @@ app.get('/take-web-screenshot', (req, res) => {
 
           fetch(signedUrl, { method: 'PUT', body: data })
             .then(() => {
-              res.write(JSON.stringify(fileName))
-              res.end()
-            })
-            .catch(error => console.log("error", error))
-        })
-        .catch(error => console.log("error", error))
-    })
-    .catch(error => console.log("error", error))
-
-})
-
-app.get('/take-web-screenshot', (req, res) => {
-  console.log("taking screenshot")
-  const url = req.query['url']
-
-  takeWebScreenshot(url)
-    .then(data => {
-      console.log("screenshot successful")
-      console.log(data)
-
-      const fileName = "web-screenshot_" + +new Date() + ".png"
-
-      const signS3Params = {
-        key: "images/" + fileName,
-        fileType: "image/png",
-        fileName: fileName,
-      }
-
-      signS3(signS3Params)
-        .then(({signedUrl, url}) => {
-          console.log(signedUrl, url)
-
-          fetch(signedUrl, { method: 'PUT', body: data })
-            .then(() => {
-              res.write(JSON.stringify(fileName))
+              res.write(JSON.stringify("https://" + S3_BUCKET + ".s3.amazonaws.com/images/" + fileName))
               res.end()
             })
             .catch(error => console.log("error", error))
