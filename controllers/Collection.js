@@ -46,7 +46,6 @@ exports.add_resource = function(req, res) {
 }
 
 exports.remove_resource = function(req, res) {
-  console.log(req.body)
   const {resourceId, parentId} = req.body
   Collection.findByIdAndUpdate(parentId, { $pull: {resources: resourceId}})
     .exec((err, data) => {
@@ -67,7 +66,6 @@ exports.find_by_url = function(req, res) {
 }
 
 exports.get_full_list = function(req, res) {
-  console.log(req.query)
   Collection.find(req.query)
     .sort( { title: 1 } )
     .populate('team')

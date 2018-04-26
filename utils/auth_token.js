@@ -13,11 +13,9 @@ exports.getToken = function() {
   return new Promise(function(resolve, reject) {
     AuthToken.find({}).exec((err, data) => {
       if (err) { return err }
-      console.log(data.length)
 
       if (data && data.length > 0) {
         if (isTokenValid(data[0])) {
-          console.log("token is valid")
           resolve(data[0])
           return
         }
@@ -29,10 +27,7 @@ exports.getToken = function() {
 }
 
 const isTokenValid = function(token) {
-  console.log("checking token valid")
   if (token && token.expires_in) {
-    console.log(token.createdAt.getTime()/1000 + token.expires_in)
-    console.log(currTime.getTime()/1000)
     if (token.createdAt.getTime()/1000 + token.expires_in > currTime.getTime()/1000) {
       return true
     }
@@ -42,8 +37,6 @@ const isTokenValid = function(token) {
 }
 
 const getNewToken = function(resolve, reject) {
-  console.log("getting new token")
-
   var options = {
     method: 'POST',
     url: DOMAIN,
@@ -58,7 +51,6 @@ const getNewToken = function(resolve, reject) {
   request(options, function (error, response, body) {
     if (error) throw new Error(error)
 
-    console.log(body)
     if (body) {
 
       AuthToken.remove().exec(() => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use strict'
 
 const express = require('express')
@@ -85,14 +86,10 @@ app.get('/sign-s3', (req, res) => {
 })
 
 app.get('/take-web-screenshot', (req, res) => {
-  console.log("taking screenshot")
   const url = req.query['url']
 
   takeWebScreenshot(url)
     .then(data => {
-      console.log("screenshot successful")
-      console.log(data)
-
       const fileName = "web-screenshot_" + +new Date() + ".png"
 
       const signS3Params = {
@@ -103,7 +100,6 @@ app.get('/take-web-screenshot', (req, res) => {
 
       signS3(signS3Params)
         .then(({signedUrl, url}) => {
-          console.log(signedUrl, url)
 
           fetch(signedUrl, { method: 'PUT', body: data })
             .then(() => {
@@ -133,6 +129,7 @@ app.get('/users', user_controller.get_full_list)
 app.put('/user-make-core-admin', user_controller.user_make_core_admin)
 app.put('/user-find-by-auth0id', user_controller.find_by_auth0id)
 
+
 app.post('/collection', collection_controller.create)
 app.delete('/collection', collection_controller.delete_by_id)
 app.put('/collection', collection_controller.update_by_id)
@@ -140,7 +137,7 @@ app.put('/collection-add-resource', collection_controller.add_resource)
 app.put('/collection-remove-resource', collection_controller.remove_resource)
 app.get('/collection', collection_controller.find_by_url)
 app.get('/collections', collection_controller.get_full_list)
-// app.get('/collection-is-path-taken', collection_controller.is_path_taken)
+
 
 app.post('/subcollection', subcollection_controller.create)
 app.delete('/subcollection', subcollection_controller.delete_by_id)
@@ -158,47 +155,16 @@ app.get('/resource', resource_controller.find_by_id)
 app.get('/resources', resource_controller.get_full_list)
 
 
-
-
-// Resource.find({ size: 'small' }).where('createdDate').gt(oneYearAgo).exec(callback)
-// Resource.findOneAndUpdate({ name: 'borne' }, { name: 'jason bourne' }, options, callback)
-// Resource.findByIdAndUpdate(id, { name: 'jason bourne' }, options, callback)
-// Resource.remove({ size: 'large' }, function (err) {
-//   if (err) return handleError(err)
-//   // removed!
+// const authCheck = jwt({
+//   secret: jwks.expressJwtSecret({
+//         cache: true,
+//         rateLimit: true,
+//         jwksRequestsPerMinute: 5,
+//         // YOUR-AUTH0-DOMAIN name e.g https://prosper.auth0.com
+//         jwksUri: process.env.AUTH0_DOMAIN + "/.well-known/jwks.json"
+//     }),
+//     // This is the identifier we set when we created the API
+//     audience: process.env.API_AUDIENCE,
+//     issuer: process.env.AUTH0_DOMAIN,
+//     algorithms: ['RS256']
 // })
-
-
-
-// app.use('/resources', ResourceRoutes)
-// app.use('/catalog', catalog)
-// app.use('/resource', ResourceRoutes)
-
-// app.use((req, res, next) => {
-//   const err = new Error('Not Found')
-//   err.status = 404
-//   next(err)
-// })
-// app.use((err, req, res, next) => {
-//   res.status(err.status || 500)
-//   res.json({
-//     error: {
-//       message: err.message
-//     }
-//   })
-// })
-
-
-const authCheck = jwt({
-  secret: jwks.expressJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
-        // YOUR-AUTH0-DOMAIN name e.g https://prosper.auth0.com
-        jwksUri: process.env.AUTH0_DOMAIN + "/.well-known/jwks.json"
-    }),
-    // This is the identifier we set when we created the API
-    audience: process.env.API_AUDIENCE,
-    issuer: process.env.AUTH0_DOMAIN,
-    algorithms: ['RS256']
-})
