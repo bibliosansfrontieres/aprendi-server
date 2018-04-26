@@ -10,7 +10,7 @@ exports.create = function(req, res) {
   team.save((err, data) => {
     if (err) { res.send({error: err}) }
      if (data.users && data.users.length > 0) {
-       User.findByIdAndUpdate(data.users[0], { $push: {teams: team._id}})
+       User.findByIdAndUpdate(data.users[0], { $addToSet: {teams: team._id}})
          .exec((err, data) => {
            console.log(data)
          })
@@ -77,25 +77,23 @@ exports.add_user = (req, res) => {
   const {teamId, userId, approvalStatus} = req.body
 
   if (approvalStatus === "pending") {
-    Team.findByIdAndUpdate(teamId, { $push: {pending_users: userId}})
+    Team.findByIdAndUpdate(teamId, { $addToSet: {pending_users: userId}})
       .exec((err, data) => {
         console.log(data)
-
       })
 
-    User.findByIdAndUpdate(userId, { $push: {pending_teams: teamId}}, {'new': true})
+    User.findByIdAndUpdate(userId, { $addToSet: {pending_teams: teamId}}, {'new': true})
       .exec((err, data) => {
         console.log(data)
         res.json(data)
       })
   } else {
-    Team.findByIdAndUpdate(teamId, { $push: {users: userId}})
+    Team.findByIdAndUpdate(teamId, { $addToSet: {users: userId}, $pull: {pending_users: userId}})
       .exec((err, data) => {
         console.log(data)
-
       })
 
-    User.findByIdAndUpdate(userId, { $push: {teams: teamId}})
+    User.findByIdAndUpdate(userId, { $addToSet: {teams: teamId}, $pull: {pending_teams: teamId}})
       .exec((err, data) => {
         console.log(data)
         res.json(data)
@@ -106,13 +104,13 @@ exports.add_user = (req, res) => {
 exports.approve_user_request = (req, res) => {
   const {teamId, userId} = req.body
 
-  Team.findByIdAndUpdate(teamId, { $push: {users: userId}, $pull: {pending_users: userId}})
+  Team.findByIdAndUpdate(teamId, { $addToSet: {users: userId}, $pull: {pending_users: userId}})
     .exec((err, data) => {
       console.log(data)
 
     })
 
-  User.findByIdAndUpdate(userId, { $push: {teams: teamId}, $pull: {pending_teams: teamId} })
+  User.findByIdAndUpdate(userId, { $addToSet: {teams: teamId}, $pull: {pending_teams: teamId} })
     .exec((err, data) => {
       console.log(data)
       res.json(data)
